@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DAVID RAMIREZ // ANALYST PROFILE</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #020408;
+  --bg2:      #050C12;
+  --bg3:      #080F18;
+  --panel:    #0A1520;
+  --border:   #0D2035;
+  --border2:  #1A3A55;
+  --green:    #00FF88;
+  --green-dim:#00AA55;
+  --green-bg: rgba(0,255,136,.04);
+  --teal:     #00D4FF;
+  --teal-dim: #0088AA;
+  --red:      #FF3355;
+  --orange:   #FF8800;
+  --yellow:   #FFD700;
+  --muted:    #2A4A65;
+  --muted2:   #3A6A90;
+  --white:    #C8E8FF;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-head: 'Orbitron', sans-serif;
+  --font-body: 'Exo 2', sans-serif;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCANLINE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.15) 2px,
+    rgba(0,0,0,.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── PARTICLE CANVAS ── */
+#particleCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── GRID BACKGROUND ── */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── MAIN WRAPPER ── */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(2,4,8,.95);
+  border-bottom: 1px solid var(--border2);
+  backdrop-filter: blur(12px);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.topbar-left { display: flex; align-items: center; gap: 20px; }
+.topbar-logo {
+  color: var(--green);
+  font-family: var(--font-head);
+  font-size: 13px;
+  letter-spacing: 3px;
+}
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted2);
+}
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+.topbar-right { display: flex; gap: 20px; align-items: center; }
+.topbar-item { color: var(--muted2); letter-spacing: 1px; }
+.topbar-item span { color: var(--teal); }
+#liveClock { color: var(--green); letter-spacing: 2px; }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 60px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero-left { }
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--teal);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--teal);
+}
+
+.hero-name {
+  font-family: var(--font-head);
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  color: var(--white);
+  text-shadow: 0 0 40px rgba(0,212,255,.2);
+}
+.hero-name span { color: var(--green); }
+
+.hero-title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--teal);
+  letter-spacing: 3px;
+  margin-bottom: 24px;
+}
+
+.hero-terminal {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--green);
+  min-height: 20px;
+  margin-bottom: 32px;
+}
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--green);
+  margin-left: 2px;
+  animation: blink .8s step-end infinite;
+  vertical-align: middle;
+}
+
+.hero-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 9px 20px;
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s;
+  background: none;
+  text-transform: uppercase;
+}
+.hero-link:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.hero-link.primary { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.hero-link.primary:hover { background: rgba(0,255,136,.1); }
+
+/* Threat level widget */
+.threat-widget {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 20px;
+  min-width: 200px;
+  position: relative;
+}
+.threat-widget::before {
+  content: 'ANALYST STATUS';
+  position: absolute;
+  top: -1px; left: 20px;
+  background: var(--panel);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--muted2);
+  padding: 0 6px;
+  transform: translateY(-50%);
+}
+.threat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.threat-row:last-child { border-bottom: none; }
+.threat-key { color: var(--muted2); letter-spacing: 1px; }
+.threat-val { color: var(--green); font-weight: 600; }
+.threat-val.orange { color: var(--orange); }
+.threat-val.teal { color: var(--teal); }
+
+/* ── SECTION ── */
+.section { padding: 60px 0; border-bottom: 1px solid var(--border); }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.section-title {
+  font-family: var(--font-head);
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: var(--white);
+}
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border2), transparent);
+}
+
+/* ── CERTS ── */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.cert-badge {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: all .2s;
+}
+.cert-badge::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+}
+.cert-badge:hover {
+  border-color: var(--teal);
+  background: rgba(0,212,255,.04);
+  transform: translateX(4px);
+}
+.cb-isc2::before  { background: var(--green); }
+.cb-comp::before  { background: var(--teal); }
+.cb-axelos::before { background: var(--yellow); }
+
+.cert-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.cert-info { }
+.cert-org {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--muted2);
+  margin-bottom: 2px;
+}
+.cert-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.3;
+}
+.cert-verified {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--green);
+  opacity: .6;
+}
+
+/* ── PROJECTS ── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+.project-card {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 0;
+  overflow: hidden;
+  transition: all .2s;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+.project-card:hover { border-color: var(--green); }
+.project-card:hover .pc-header { background: rgba(0,255,136,.05); }
+
+.pc-header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: background .2s;
+}
+.pc-header-left { }
+.pc-case-num {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--muted2);
+  margin-bottom: 4px;
+}
+.pc-name {
+  font-family: var(--font-head);
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--white);
+}
+.pc-status {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.pc-status.live { color: var(--green); border-color: var(--green); background: rgba(0,255,136,.08); }
+
+.pc-body { padding: 16px 18px; }
+.pc-desc {
+  font-size: 12px;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.pc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.pc-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+}
+
+.pc-footer {
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pc-link {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-decoration: none;
+}
+.pc-link:hover { color: var(--green); }
+.pc-arrow { color: var(--muted); font-size: 10px; }
+
+/* ── SKILLS RADAR ── */
+.skills-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.skill-group { margin-bottom: 24px; }
+.skill-group-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--teal);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.skill-bar-wrap { margin-bottom: 8px; }
+.skill-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted2);
+  margin-bottom: 4px;
+}
+.skill-bar-label span:last-child { color: var(--green); }
+.skill-bar-track {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-dim), var(--green));
+  transform-origin: left;
+  animation: growBar 1.5s ease forwards;
+  transform: scaleX(0);
+}
+@keyframes growBar { to { transform: scaleX(1); } }
+
+/* Activity feed */
+.activity-feed { }
+.activity-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--teal);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  align-items: flex-start;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-time { color: var(--muted); width: 80px; flex-shrink: 0; }
+.activity-dot { color: var(--green); flex-shrink: 0; margin-top: 1px; }
+.activity-text { color: var(--muted2); line-height: 1.5; }
+.activity-text strong { color: var(--white); }
+
+/* ── CONTACT ── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.contact-card {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  transition: all .2s;
+}
+.contact-card:hover { border-color: var(--green); }
+.contact-icon { font-size: 24px; flex-shrink: 0; }
+.contact-info { }
+.contact-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--muted2);
+  margin-bottom: 4px;
+}
+.contact-val { font-size: 13px; color: var(--white); font-weight: 500; }
+
+/* ── THREAT MAP (the extra cool thing) ── */
+.threat-map-section { padding: 60px 0; border-bottom: 1px solid var(--border); }
+.threat-map-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 24px;
+  position: relative;
+}
+.threat-map-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--teal);
+  margin-bottom: 16px;
+}
+#threatCanvas {
+  width: 100%;
+  height: 280px;
+  display: block;
+}
+.threat-legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.tl-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted2);
+  letter-spacing: 1px;
+}
+.tl-dot { width: 6px; height: 6px; border-radius: 50%; }
+.threat-feed {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  height: 80px;
+  overflow: hidden;
+}
+.tf-item {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted2);
+  padding: 3px 0;
+  display: flex;
+  gap: 10px;
+}
+.tf-time { color: var(--muted); width: 60px; }
+.tf-country { color: var(--green); width: 120px; }
+.tf-type { color: var(--teal); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+footer a { color: var(--muted2); text-decoration: none; }
+footer a:hover { color: var(--green); }
+
+/* ── GLITCH EFFECT ── */
+.glitch {
+  position: relative;
+}
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-head);
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+.glitch::before {
+  color: var(--teal);
+  animation: glitch1 3s infinite;
+  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+}
+.glitch::after {
+  color: var(--red);
+  animation: glitch2 3s infinite;
+  clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+}
+@keyframes glitch1 {
+  0%,90%,100% { transform: translate(0); opacity: 0; }
+  91% { transform: translate(-2px, 1px); opacity: .5; }
+  93% { transform: translate(2px, -1px); opacity: .5; }
+  95% { transform: translate(0); opacity: 0; }
+}
+@keyframes glitch2 {
+  0%,90%,100% { transform: translate(0); opacity: 0; }
+  92% { transform: translate(2px, 1px); opacity: .5; }
+  94% { transform: translate(-2px, -1px); opacity: .5; }
+  96% { transform: translate(0); opacity: 0; }
+}
+
+
+/* CVE PANEL */
+.cve-panel {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 20px;
+  position: relative;
+}
+.cve-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.cve-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--teal);
+}
+.cve-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+.cve-list { display: flex; flex-direction: column; gap: 8px; }
+.cve-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--muted);
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 130px 60px 1fr;
+  gap: 12px;
+  align-items: start;
+  transition: border-color .2s;
+}
+.cve-item:hover { border-left-color: var(--red); }
+.cve-item.critical { border-left-color: var(--red); }
+.cve-item.high     { border-left-color: var(--orange); }
+.cve-item.medium   { border-left-color: var(--yellow); }
+.cve-item.low      { border-left-color: var(--green); }
+.cve-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 1px;
+}
+.cve-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted2);
+}
+.cve-score-wrap { display: flex; align-items: center; gap: 6px; }
+.cve-score {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+.cve-score.critical { color: var(--red); }
+.cve-score.high     { color: var(--orange); }
+.cve-score.medium   { color: var(--yellow); }
+.cve-score.low      { color: var(--green); }
+.cve-severity {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+.cve-severity.critical { color: var(--red); }
+.cve-severity.high     { color: var(--orange); }
+.cve-severity.medium   { color: var(--yellow); }
+.cve-severity.low      { color: var(--green); }
+.cve-desc {
+  font-size: 11px;
+  color: var(--muted2);
+  line-height: 1.6;
+}
+.cve-desc strong { color: var(--white); }
+.cve-loading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted2);
+  text-align: center;
+  padding: 24px 0;
+  letter-spacing: 2px;
+}
+.cve-error {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted2);
+  text-align: center;
+  padding: 20px 0;
+  letter-spacing: 1px;
+  line-height: 1.7;
+}
+.cve-footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cve-footer a { color: var(--muted2); text-decoration: none; }
+.cve-footer a:hover { color: var(--teal); }
+
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; }
+  .threat-widget { display: none; }
+  .skills-wrap { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particleCanvas"></canvas>
+<div class="grid-bg"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">DR//SEC</div>
+    <div class="topbar-status">
+      <div class="status-dot"></div>
+      <span>SYSTEM ONLINE</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-item">LOC: <span>HUNTSVILLE, AL → WARSAW, PL</span></div>
+    <div class="topbar-item">CLEARANCE: <span>ANALYST</span></div>
+    <div id="liveClock"></div>
+  </div>
+</div>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">ANALYST PROFILE // ACTIVE</div>
+      <div class="hero-name glitch" data-text="DAVID RAMIREZ">DAVID <span>RAMIREZ</span></div>
+      <div class="hero-title">IT AUDIT &nbsp;|&nbsp; SOC 1 &nbsp;|&nbsp; GRC &nbsp;|&nbsp; CYBERSECURITY</div>
+      <div class="hero-terminal"><span id="terminalText"></span><span class="cursor"></span></div>
+      <div class="hero-links">
+        <a class="hero-link primary" href="#" id="heroEmail">CONTACT</a>
+        <a class="hero-link" href="https://linkedin.com/in/davidramirez-sec" target="_blank">LINKEDIN</a>
+        <a class="hero-link" href="https://github.com/davidramirez-sec" target="_blank">GITHUB</a>
+        <button class="hero-link" onclick="downloadCV()">DOWNLOAD CV</button>
+      </div>
+    </div>
+    <div class="threat-widget">
+      <div class="threat-row"><span class="threat-key">STATUS</span><span class="threat-val">OPEN TO WORK</span></div>
+      <div class="threat-row"><span class="threat-key">TARGET</span><span class="threat-val teal">POLAND / EU</span></div>
+      <div class="threat-row"><span class="threat-key">VISA</span><span class="threat-val orange">BLUE CARD REQ.</span></div>
+      <div class="threat-row"><span class="threat-key">EXPERIENCE</span><span class="threat-val">4+ YEARS</span></div>
+      <div class="threat-row"><span class="threat-key">CERTS</span><span class="threat-val">12 ACTIVE</span></div>
+      <div class="threat-row"><span class="threat-key">CLEARANCE</span><span class="threat-val">ANALYST LVL</span></div>
+      <div class="threat-row"><span class="threat-key">LANGUAGES</span><span class="threat-val">EN / ES C2</span></div>
+    </div>
+  </section>
+
+  <!-- LIVE THREAT MAP -->
+  <section class="threat-map-section">
+    <div class="section-header">
+      <span class="section-num">00</span>
+      <span class="section-title">LIVE THREAT INTELLIGENCE FEED</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="threat-map-wrap">
+      <div class="threat-map-title">GLOBAL ATTACK SURFACE MONITOR // SIMULATED REAL-TIME DATA</div>
+      <canvas id="threatCanvas"></canvas>
+      <div class="threat-legend">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--red)"></div>CRITICAL THREAT</div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--orange)"></div>HIGH SEVERITY</div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--yellow)"></div>MEDIUM</div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--green)"></div>MONITORED</div>
+      </div>
+      <div class="threat-feed" id="threatFeed"></div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">VERIFIED CREDENTIALS</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-badge cb-isc2">
+        <div class="cert-icon">🛡️</div>
+        <div class="cert-info">
+          <div class="cert-org">ISC2</div>
+          <div class="cert-name">SSCP</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-isc2">
+        <div class="cert-icon">☁️</div>
+        <div class="cert-info">
+          <div class="cert-org">ISC2</div>
+          <div class="cert-name">CCSP</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">🔒</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">Security+</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">🔍</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">CySA+</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">⚡</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">PenTest+</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">🌐</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">Network+</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">💻</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">A+</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">📋</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">Project+</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">🏗️</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">Secure Infrastructure Specialist</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp">
+        <div class="cert-icon">⚙️</div>
+        <div class="cert-info">
+          <div class="cert-org">COMPTIA</div>
+          <div class="cert-name">IT Operations Specialist</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-axelos">
+        <div class="cert-icon">📐</div>
+        <div class="cert-info">
+          <div class="cert-org">AXELOS</div>
+          <div class="cert-name">ITIL Foundation v4</div>
+        </div>
+        <div class="cert-verified">VERIFIED</div>
+      </div>
+      <div class="cert-badge cb-comp" style="border-style:dashed;opacity:.5">
+        <div class="cert-icon">🎯</div>
+        <div class="cert-info">
+          <div class="cert-org">WGU</div>
+          <div class="cert-name">B.S. Cybersecurity — EXP. 2026</div>
+        </div>
+        <div class="cert-verified" style="color:var(--orange)">PENDING</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">CLASSIFIED PROJECT FILES</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <a class="project-card" href="https://davidramirez-sec.github.io/auditmap" target="_blank">
+        <div class="pc-header">
+          <div class="pc-header-left">
+            <div class="pc-case-num">CASE FILE // DR-001</div>
+            <div class="pc-name">AUDITMAP</div>
+          </div>
+          <div class="pc-status live">LIVE</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-desc">Multi-framework IT control mapping tool. Cross-references NIST SP 800-53, ISO/IEC 27001, and SOC 2 TSC across 50 controls with gap scoring and evidence checklist export.</div>
+          <div class="pc-tags">
+            <span class="pc-tag">NIST</span>
+            <span class="pc-tag">ISO 27001</span>
+            <span class="pc-tag">SOC 2</span>
+            <span class="pc-tag">ITGC</span>
+          </div>
+        </div>
+        <div class="pc-footer">
+          <span class="pc-link">ACCESS FILE →</span>
+          <span class="pc-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://davidramirez-sec.github.io/itgc-scorecard" target="_blank">
+        <div class="pc-header">
+          <div class="pc-header-left">
+            <div class="pc-case-num">CASE FILE // DR-002</div>
+            <div class="pc-name">ITGC SCORECARD</div>
+          </div>
+          <div class="pc-status live">LIVE</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-desc">15-question SOC 1 ITGC health assessment across Logical Access, Change Management, and Computer Operations. Scored report card with remediation priorities.</div>
+          <div class="pc-tags">
+            <span class="pc-tag">SOC 1</span>
+            <span class="pc-tag">SSAE 18</span>
+            <span class="pc-tag">ITGC</span>
+          </div>
+        </div>
+        <div class="pc-footer">
+          <span class="pc-link">ACCESS FILE →</span>
+          <span class="pc-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://davidramirez-sec.github.io/soc1-simulator" target="_blank">
+        <div class="pc-header">
+          <div class="pc-header-left">
+            <div class="pc-case-num">CASE FILE // DR-003</div>
+            <div class="pc-name">SOC1 SIMULATOR</div>
+          </div>
+          <div class="pc-status live">LIVE</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-desc">Audit walkthrough simulator with 6 real-world scenarios. Read client evidence, identify exceptions, and get detailed feedback on your audit judgment.</div>
+          <div class="pc-tags">
+            <span class="pc-tag">SOC 1</span>
+            <span class="pc-tag">AUDIT</span>
+            <span class="pc-tag">SSAE 18</span>
+          </div>
+        </div>
+        <div class="pc-footer">
+          <span class="pc-link">ACCESS FILE →</span>
+          <span class="pc-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://davidramirez-sec.github.io/soc1-scope" target="_blank">
+        <div class="pc-header">
+          <div class="pc-header-left">
+            <div class="pc-case-num">CASE FILE // DR-004</div>
+            <div class="pc-name">SOC1 SCOPE TOOL</div>
+          </div>
+          <div class="pc-status live">LIVE</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-desc">8-question decision tool determining SOC 1 applicability, report type, and in-scope domains based on SSAE 18 criteria. For companies navigating their first engagement.</div>
+          <div class="pc-tags">
+            <span class="pc-tag">SOC 1</span>
+            <span class="pc-tag">SCOPING</span>
+            <span class="pc-tag">TYPE I/II</span>
+          </div>
+        </div>
+        <div class="pc-footer">
+          <span class="pc-link">ACCESS FILE →</span>
+          <span class="pc-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://davidramirez-sec.github.io/breach-patterns" target="_blank">
+        <div class="pc-header">
+          <div class="pc-header-left">
+            <div class="pc-case-num">CASE FILE // DR-005</div>
+            <div class="pc-name">BREACH PATTERNS</div>
+          </div>
+          <div class="pc-status live">LIVE</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-desc">Visual dashboard of 30 documented data breaches 2013–2024. Filterable by attack vector and sector. Every breach includes what failed, detection time, cost, and cited source.</div>
+          <div class="pc-tags">
+            <span class="pc-tag">THREAT INTEL</span>
+            <span class="pc-tag">IR</span>
+            <span class="pc-tag">DATA</span>
+          </div>
+        </div>
+        <div class="pc-footer">
+          <span class="pc-link">ACCESS FILE →</span>
+          <span class="pc-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://davidramirez-sec.github.io/itgc-scorecard" target="_blank" style="border-style:dashed;opacity:.6">
+        <div class="pc-header">
+          <div class="pc-header-left">
+            <div class="pc-case-num">CASE FILE // DR-006</div>
+            <div class="pc-name">[ CLASSIFIED ]</div>
+          </div>
+          <div class="pc-status" style="color:var(--orange);border-color:var(--orange)">IN DEV</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-desc" style="filter:blur(3px)">NIS2 Directive compliance gap assessment tool for EU companies. Maps security posture against Article requirements with remediation roadmap.</div>
+          <div class="pc-tags">
+            <span class="pc-tag">NIS2</span>
+            <span class="pc-tag">EU</span>
+            <span class="pc-tag">GRC</span>
+          </div>
+        </div>
+        <div class="pc-footer">
+          <span class="pc-link" style="color:var(--orange)">COMING SOON</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">CAPABILITY ASSESSMENT</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-wrap">
+      <div>
+        <div class="skill-group">
+          <div class="skill-group-title">AUDIT & COMPLIANCE</div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>SOC 1 / SSAE 18</span><span>ADVANCED</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>ITGC Testing</span><span>ADVANCED</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>SOC 2 / TSC</span><span>DEVELOPING</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:55%;background:linear-gradient(90deg,var(--teal-dim),var(--teal))"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>ISO 27001</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>NIST SP 800-53</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">SECURITY OPERATIONS</div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>SIEM / Splunk</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Vulnerability Mgmt</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Incident Response</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:68%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group">
+          <div class="skill-group-title">TECHNICAL</div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>PowerShell</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Python</span><span>INTERMEDIATE</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:60%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Cloud (AWS/Azure)</span><span>INTERMEDIATE</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:58%"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Active Directory</span><span>PROFICIENT</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div>
+          </div>
+        </div>
+        <div class="activity-feed">
+          <div class="activity-title">RECENT ACTIVITY LOG</div>
+          <div class="activity-item">
+            <span class="activity-time">2025-Q1</span>
+            <span class="activity-dot">▸</span>
+            <span class="activity-text">Launched <strong>Breach Patterns</strong> — 30 breach dashboard</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-time">2025-Q1</span>
+            <span class="activity-dot">▸</span>
+            <span class="activity-text">Built <strong>SOC1 Scope Tool</strong> — SSAE 18 decision engine</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-time">2024-Q4</span>
+            <span class="activity-dot">▸</span>
+            <span class="activity-text">Deployed <strong>SOC1 Simulator</strong> — audit walkthrough training</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-time">2024-Q4</span>
+            <span class="activity-dot">▸</span>
+            <span class="activity-text">Launched <strong>AuditMap</strong> — multi-framework control mapper</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-time">2024-Q3</span>
+            <span class="activity-dot">▸</span>
+            <span class="activity-text">Achieved <strong>CCSP</strong> certification — ISC2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CVE INTELLIGENCE FEED -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">LIVE CVE INTELLIGENCE</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="cve-panel">
+      <div class="cve-header-row">
+        <div class="cve-title">NIST NVD // CRITICAL & HIGH SEVERITY // REAL-TIME</div>
+        <div class="cve-live-badge">
+          <div class="status-dot"></div>
+          LIVE FEED
+        </div>
+      </div>
+      <div class="cve-list" id="cveList">
+        <div class="cve-loading">QUERYING NIST NATIONAL VULNERABILITY DATABASE...</div>
+      </div>
+      <div class="cve-footer">
+        <span>SOURCE: <a href="https://nvd.nist.gov" target="_blank">nvd.nist.gov</a> // NIST NATIONAL VULNERABILITY DATABASE</span>
+        <span id="cveLastUpdated"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">ESTABLISH CONTACT</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <a class="contact-card" href="#" id="contactEmail">
+        <div class="contact-icon">📡</div>
+        <div class="contact-info">
+          <div class="contact-label">PRIMARY CHANNEL</div>
+          <div class="contact-val" id="contactEmailDisplay"></div>
+        </div>
+      </a>
+      <a class="contact-card" href="https://linkedin.com/in/davidramirez-sec" target="_blank">
+        <div class="contact-icon">🔗</div>
+        <div class="contact-info">
+          <div class="contact-label">LINKEDIN</div>
+          <div class="contact-val">linkedin.com/in/davidramirez-sec</div>
+        </div>
+      </a>
+      <a class="contact-card" href="https://github.com/davidramirez-sec" target="_blank">
+        <div class="contact-icon">⚡</div>
+        <div class="contact-info">
+          <div class="contact-label">GITHUB</div>
+          <div class="contact-val">github.com/davidramirez-sec</div>
+        </div>
+      </a>
+      <div class="contact-card">
+        <div class="contact-icon">📍</div>
+        <div class="contact-info">
+          <div class="contact-label">RELOCATION TARGET</div>
+          <div class="contact-val">Warsaw, Poland — EU Blue Card</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="wrapper">
+  <footer>
+    <span>DAVID RAMIREZ // ANALYST PROFILE // v2.0</span>
+    <span>SSCP · CCSP · CySA+ · Security+ · ITIL v4</span>
+    <span><a href="#" id="footerEmail"><span id="footerEmailText"></span></a></span>
+  </footer>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── CLOCK ──────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const utc = now.toUTCString().replace(' GMT','');
+  document.getElementById('liveClock').textContent = utc + ' UTC';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── TERMINAL TYPEWRITER ────────────────────────────────────────────────────
+const lines = [
+  'Initializing analyst profile...',
+  'Loading credentials... [12 VERIFIED]',
+  'Scanning frameworks: NIST | ISO 27001 | SOC 1 | SSAE 18',
+  'Status: OPEN TO RELOCATION → WARSAW, POLAND',
+  'Target: SOC 1 Audit | GRC | IT Compliance',
+  'Blue Card sponsorship required.',
+  'Ready. Awaiting contact.'
+];
+let lineIdx = 0, charIdx = 0, deleting = false;
+const termEl = document.getElementById('terminalText');
+
+function typeWriter() {
+  if (lineIdx >= lines.length) { lineIdx = 0; }
+  const current = lines[lineIdx];
+  if (!deleting) {
+    termEl.textContent = current.substring(0, charIdx + 1);
+    charIdx++;
+    if (charIdx === current.length) {
+      deleting = true;
+      setTimeout(typeWriter, 1800);
+      return;
+    }
+  } else {
+    termEl.textContent = current.substring(0, charIdx - 1);
+    charIdx--;
+    if (charIdx === 0) {
+      deleting = false;
+      lineIdx++;
+    }
+  }
+  setTimeout(typeWriter, deleting ? 30 : 55);
+}
+typeWriter();
+
+// ── PARTICLE SYSTEM ────────────────────────────────────────────────────────
+const pCanvas = document.getElementById('particleCanvas');
+const pCtx = pCanvas.getContext('2d');
+let particles = [];
+
+function resizeParticleCanvas() {
+  pCanvas.width = window.innerWidth;
+  pCanvas.height = window.innerHeight;
+}
+resizeParticleCanvas();
+window.addEventListener('resize', resizeParticleCanvas);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * pCanvas.width;
+    this.y = Math.random() * pCanvas.height;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.speedY = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.4 + 0.05;
+    this.color = Math.random() > 0.7 ? '#00D4FF' : '#00FF88';
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > pCanvas.width || this.y < 0 || this.y > pCanvas.height) this.reset();
+  }
+  draw() {
+    pCtx.beginPath();
+    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    pCtx.fillStyle = this.color;
+    pCtx.globalAlpha = this.opacity;
+    pCtx.fill();
+    pCtx.globalAlpha = 1;
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function animateParticles() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  // Draw connections
+  particles.forEach((p, i) => {
+    particles.slice(i + 1).forEach(p2 => {
+      const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+      if (dist < 80) {
+        pCtx.beginPath();
+        pCtx.moveTo(p.x, p.y);
+        pCtx.lineTo(p2.x, p2.y);
+        pCtx.strokeStyle = '#00FF88';
+        pCtx.globalAlpha = (1 - dist / 80) * 0.06;
+        pCtx.lineWidth = 0.5;
+        pCtx.stroke();
+        pCtx.globalAlpha = 1;
+      }
+    });
+  });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ── THREAT MAP ─────────────────────────────────────────────────────────────
+const tCanvas = document.getElementById('threatCanvas');
+const tCtx = tCanvas.getContext('2d');
+
+function resizeThreatCanvas() {
+  tCanvas.width = tCanvas.offsetWidth;
+  tCanvas.height = tCanvas.offsetHeight;
+}
+resizeThreatCanvas();
+window.addEventListener('resize', resizeThreatCanvas);
+
+const CITIES = [
+  { name:'Moscow', x:.62, y:.22, threat:'critical' },
+  { name:'Beijing', x:.73, y:.28, threat:'critical' },
+  { name:'Warsaw', x:.52, y:.23, threat:'low', target:true },
+  { name:'London', x:.47, y:.22, threat:'medium' },
+  { name:'New York', x:.24, y:.27, threat:'medium' },
+  { name:'Tehran', x:.63, y:.32, threat:'high' },
+  { name:'Pyongyang', x:.77, y:.27, threat:'high' },
+  { name:'São Paulo', x:.31, y:.52, threat:'low' },
+  { name:'Lagos', x:.49, y:.42, threat:'medium' },
+  { name:'Mumbai', x:.67, y:.37, threat:'low' },
+  { name:'Sydney', x:.82, y:.62, threat:'low' },
+  { name:'Toronto', x:.22, y:.24, threat:'low' },
+  { name:'Singapore', x:.76, y:.46, threat:'medium' },
+  { name:'Huntsville', x:.21, y:.29, threat:'low', home:true },
+];
+
+const THREAT_COLORS = {
+  critical: '#FF3355',
+  high: '#FF8800',
+  medium: '#FFD700',
+  low: '#00FF88',
+};
+
+let attacks = [];
+let attackTimer = 0;
+
+function spawnAttack() {
+  const sources = CITIES.filter(c => ['critical','high'].includes(c.threat));
+  const targets = CITIES.filter(c => c.target || c.home || c.threat === 'low');
+  const src = sources[Math.floor(Math.random() * sources.length)];
+  const tgt = targets[Math.floor(Math.random() * targets.length)];
+  if (src && tgt && src !== tgt) {
+    attacks.push({ src, tgt, progress: 0, speed: 0.005 + Math.random() * 0.008, color: THREAT_COLORS[src.threat] });
+  }
+}
+
+function drawWorldMap() {
+  const w = tCanvas.width, h = tCanvas.height;
+  tCtx.clearRect(0, 0, w, h);
+
+  // Simple world outline suggestion — just continent blobs
+  tCtx.strokeStyle = 'rgba(0,212,255,.08)';
+  tCtx.lineWidth = 1;
+  // North America
+  tCtx.beginPath();
+  tCtx.ellipse(w*.22, h*.3, w*.12, h*.2, 0, 0, Math.PI*2);
+  tCtx.stroke();
+  // Europe
+  tCtx.beginPath();
+  tCtx.ellipse(w*.5, h*.25, w*.06, h*.12, 0, 0, Math.PI*2);
+  tCtx.stroke();
+  // Asia
+  tCtx.beginPath();
+  tCtx.ellipse(w*.72, h*.3, w*.14, h*.18, 0, 0, Math.PI*2);
+  tCtx.stroke();
+  // Africa
+  tCtx.beginPath();
+  tCtx.ellipse(w*.5, h*.45, w*.07, h*.15, 0, 0, Math.PI*2);
+  tCtx.stroke();
+  // South America
+  tCtx.beginPath();
+  tCtx.ellipse(w*.29, h*.52, w*.07, h*.14, 0, 0, Math.PI*2);
+  tCtx.stroke();
+  // Australia
+  tCtx.beginPath();
+  tCtx.ellipse(w*.82, h*.6, w*.06, h*.08, 0, 0, Math.PI*2);
+  tCtx.stroke();
+
+  // Draw attack lines
+  attacks.forEach(atk => {
+    const sx = atk.src.x * w, sy = atk.src.y * h;
+    const tx = atk.tgt.x * w, ty = atk.tgt.y * h;
+    const cx = (sx + tx) / 2, cy = Math.min(sy, ty) - 40;
+    atk.progress += atk.speed;
+    const t = atk.progress;
+    const px = (1-t)*(1-t)*sx + 2*(1-t)*t*cx + t*t*tx;
+    const py = (1-t)*(1-t)*sy + 2*(1-t)*t*cy + t*t*ty;
+
+    tCtx.beginPath();
+    tCtx.moveTo(sx, sy);
+    tCtx.quadraticCurveTo(cx, cy, px, py);
+    tCtx.strokeStyle = atk.color;
+    tCtx.globalAlpha = .4;
+    tCtx.lineWidth = 1;
+    tCtx.stroke();
+    tCtx.globalAlpha = 1;
+
+    // Dot at front
+    tCtx.beginPath();
+    tCtx.arc(px, py, 2, 0, Math.PI*2);
+    tCtx.fillStyle = atk.color;
+    tCtx.fill();
+  });
+
+  // Remove completed attacks
+  attacks = attacks.filter(a => a.progress < 1);
+
+  // Draw cities
+  CITIES.forEach(city => {
+    const x = city.x * w, y = city.y * h;
+    const col = city.target ? '#00FF88' : city.home ? '#00D4FF' : THREAT_COLORS[city.threat];
+    const size = city.target || city.home ? 5 : 3;
+
+    // Pulse ring
+    const pulse = (Date.now() % 2000) / 2000;
+    tCtx.beginPath();
+    tCtx.arc(x, y, size + pulse * 12, 0, Math.PI*2);
+    tCtx.strokeStyle = col;
+    tCtx.globalAlpha = (1 - pulse) * 0.3;
+    tCtx.lineWidth = 1;
+    tCtx.stroke();
+    tCtx.globalAlpha = 1;
+
+    tCtx.beginPath();
+    tCtx.arc(x, y, size, 0, Math.PI*2);
+    tCtx.fillStyle = col;
+    tCtx.fill();
+
+    if (city.target || city.home) {
+      tCtx.font = '9px Share Tech Mono';
+      tCtx.fillStyle = col;
+      tCtx.fillText(city.name.toUpperCase(), x + 8, y + 3);
+    }
+  });
+}
+
+function animateThreatMap() {
+  attackTimer++;
+  if (attackTimer % 60 === 0) spawnAttack();
+  drawWorldMap();
+  requestAnimationFrame(animateThreatMap);
+}
+animateThreatMap();
+spawnAttack(); spawnAttack(); spawnAttack();
+
+// ── THREAT FEED ────────────────────────────────────────────────────────────
+const ATTACK_TYPES = ['CREDENTIAL STUFFING','PHISHING','RANSOMWARE','SUPPLY CHAIN','BRUTE FORCE','SQL INJECTION','MFA BYPASS','ZERO-DAY EXPLOIT'];
+const COUNTRIES = ['Russia','China','North Korea','Iran','Romania','Brazil','Nigeria','Ukraine','Vietnam','Indonesia'];
+const feedEl = document.getElementById('threatFeed');
+
+function addFeedItem() {
+  const now = new Date();
+  const time = now.toTimeString().slice(0,8);
+  const country = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+  const type = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+  const div = document.createElement('div');
+  div.className = 'tf-item';
+  div.innerHTML = `<span class="tf-time">${time}</span><span class="tf-country">${country.toUpperCase()}</span><span class="tf-type">${type}</span>`;
+  feedEl.insertBefore(div, feedEl.firstChild);
+  while (feedEl.children.length > 5) feedEl.removeChild(feedEl.lastChild);
+}
+setInterval(addFeedItem, 2800);
+addFeedItem(); addFeedItem(); addFeedItem();
+
+// ── CV DOWNLOAD ────────────────────────────────────────────────────────────
+function downloadCV() {
+  const content = `DAVID RAMIREZ
+IT Audit & Compliance | SOC 1 | GRC | Cybersecurity
+davidramirez.tech@gmail.com | linkedin.com/in/davidramirez-sec | github.com/davidramirez-sec
+
+OBJECTIVE
+IT audit and compliance professional seeking SOC 1 / GRC roles in Poland.
+Fully prepared to relocate. EU Blue Card sponsorship required.
+
+EXPERIENCE
+IT Controls & Compliance Analyst | Choice Hotels International | 2021 - Present
+- ITGC walkthroughs across Change Management, Logical Access, Computer Operations
+- Quarterly access reviews for 150+ accounts (NIST AC-2, SOC 2 CC6.1)
+- ServiceNow change records and audit evidence documentation
+- Splunk SIEM monitoring across 20+ endpoints
+- Tenable/Nessus vulnerability management
+- PowerShell/Python automation reducing audit prep time ~35%
+
+CERTIFICATIONS
+ISC2: SSCP, CCSP
+CompTIA: Security+, CySA+, PenTest+, Network+, A+, Project+,
+         Secure Infrastructure Specialist, IT Operations Specialist
+AXELOS: ITIL Foundation v4
+
+EDUCATION
+B.S. Cybersecurity & Information Assurance | WGU | Expected 2026
+
+FRAMEWORKS
+NIST SP 800-53 | ISO/IEC 27001 | SSAE 18 | SOC 1 | SOC 2 TSC | ITIL v4 | CIS Controls
+
+TOOLS
+Splunk | ServiceNow | Tenable/Nessus | Active Directory | PowerShell | Python | Wireshark
+
+LANGUAGES
+English C2 | Spanish C2
+
+PORTFOLIO
+AuditMap:        davidramirez-sec.github.io/auditmap
+ITGC Scorecard:  SOC1 Scope Tool: davidramirez-sec.github.io/soc1-scope
+Breach Patterns: davidramirez-sec.github.io/breach-patterns`;
+
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'David_Ramirez_CV.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// CVE FEED - pulls from NIST NVD public API
+async function loadCVEs() {
+  const list = document.getElementById('cveList');
+  try {
+    const end = new Date().toISOString().split('.')[0] + '.000';
+    const start = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('.')[0] + '.000';
+    const url = `https://services.nvd.nist.gov/rest/json/cves/2.0?cvssV3Severity=CRITICAL&pubStartDate=${start}&pubEndDate=${end}&resultsPerPage=6`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('NVD ' + res.status);
+    const data = await res.json();
+    const vulns = data.vulnerabilities || [];
+    if (!vulns.length) {
+      const res2 = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?cvssV3Severity=HIGH&pubStartDate=${start}&pubEndDate=${end}&resultsPerPage=6`);
+      const data2 = await res2.json();
+      renderCVEs(data2.vulnerabilities || []);
+    } else {
+      renderCVEs(vulns);
+    }
+    document.getElementById('cveLastUpdated').textContent = 'UPDATED: ' + new Date().toUTCString().replace(' GMT','') + ' UTC';
+  } catch(err) {
+    renderFallbackCVEs();
+    document.getElementById('cveLastUpdated').textContent = 'SHOWING NOTABLE RECENT CVEs // nvd.nist.gov';
+  }
+}
+
+function getSeverityClass(score) {
+  if (score >= 9.0) return 'critical';
+  if (score >= 7.0) return 'high';
+  if (score >= 4.0) return 'medium';
+  return 'low';
+}
+
+function renderCVEs(vulns) {
+  const list = document.getElementById('cveList');
+  if (!vulns.length) { renderFallbackCVEs(); return; }
+  list.innerHTML = vulns.map(v => {
+    const cve = v.cve;
+    const id = cve.id;
+    const desc = cve.descriptions.find(d => d.lang === 'en')?.value || 'No description available.';
+    const shortDesc = desc.length > 140 ? desc.slice(0, 140) + '...' : desc;
+    const published = cve.published?.slice(0,10) || '';
+    const metrics = cve.metrics?.cvssMetricV31?.[0] || cve.metrics?.cvssMetricV30?.[0] || cve.metrics?.cvssMetricV2?.[0];
+    const score = metrics?.cvssData?.baseScore || 0;
+    const sev = getSeverityClass(score);
+    return `<div class="cve-item ${sev}">
+      <div><div class="cve-id">${id}</div><div class="cve-date">${published}</div></div>
+      <div class="cve-score-wrap"><div><div class="cve-score ${sev}">${score.toFixed(1)}</div><div class="cve-severity ${sev}">${sev.toUpperCase()}</div></div></div>
+      <div class="cve-desc">${shortDesc}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderFallbackCVEs() {
+  const fallback = [
+    { id:'CVE-2024-3400',  score:10.0, date:'2024-04-12', desc:'PAN-OS command injection in GlobalProtect. Unauthenticated remote code execution. Actively exploited by state-sponsored actors before patch release.' },
+    { id:'CVE-2024-21887', score:9.1,  date:'2024-01-10', desc:'Ivanti Connect Secure command injection. Remote unauthenticated execution. Exploited at scale before patch was available.' },
+    { id:'CVE-2023-4966',  score:9.4,  date:'2023-10-10', desc:'Citrix Bleed — NetScaler session token leak enabling session hijacking. Exploited by LockBit and other ransomware groups.' },
+    { id:'CVE-2023-34362', score:9.8,  date:'2023-05-31', desc:'MOVEit Transfer SQL injection zero-day. Cl0p ransomware used this to compromise 2,000+ organisations before a patch existed.' },
+    { id:'CVE-2022-30190', score:7.8,  date:'2022-05-30', desc:'Follina — Microsoft Support Diagnostic Tool RCE via malicious Office documents. Exploited in targeted attacks against government entities.' },
+    { id:'CVE-2021-44228', score:10.0, date:'2021-12-10', desc:'Log4Shell — Apache Log4j JNDI injection. Unauthenticated remote code execution. Described as the most critical vulnerability discovered in a decade.' },
+  ];
+  const list = document.getElementById('cveList');
+  list.innerHTML = fallback.map(f => {
+    const sev = getSeverityClass(f.score);
+    return `<div class="cve-item ${sev}">
+      <div><div class="cve-id">${f.id}</div><div class="cve-date">${f.date}</div></div>
+      <div class="cve-score-wrap"><div><div class="cve-score ${sev}">${f.score.toFixed(1)}</div><div class="cve-severity ${sev}">${sev.toUpperCase()}</div></div></div>
+      <div class="cve-desc">${f.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+loadCVEs();
+setInterval(loadCVEs, 15 * 60 * 1000);
+
+// build email links in JS so Cloudflare can't obfuscate them
+(function() {
+  const e = ['davidramirez.tech', 'gmail.com'].join('@');
+  const m = 'mailto:' + e;
+  const els = {
+    heroEmail:           m,
+    contactEmail:        m,
+    footerEmail:         m,
+  };
+  Object.entries(els).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.href = val;
+  });
+  const disp = document.getElementById('contactEmailDisplay');
+  if (disp) disp.textContent = e;
+  const ft = document.getElementById('footerEmailText');
+  if (ft) ft.textContent = e;
+  const fe = document.getElementById('footerEmail');
+  if (fe) { fe.href = m; fe.textContent = e; }
+})();
+</script>
+</body>
+</html>
