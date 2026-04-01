@@ -1515,53 +1515,11 @@ addFeedItem(); addFeedItem(); addFeedItem();
 
 // ── CV DOWNLOAD ────────────────────────────────────────────────────────────
 function downloadCV() {
-  const content = `DAVID RAMIREZ
-IT Audit & Compliance | SOC 1 | GRC | Cybersecurity
-davidramirez.tech@gmail.com | linkedin.com/in/davidramirez-sec | github.com/davidramirez-sec
-
-OBJECTIVE
-IT audit and compliance professional seeking SOC 1 / GRC roles in Poland.
-Fully prepared to relocate. EU Blue Card sponsorship required.
-
-EXPERIENCE
-IT Controls & Compliance Analyst | Choice Hotels International | 2021 - Present
-- ITGC walkthroughs across Change Management, Logical Access, Computer Operations
-- Quarterly access reviews for 150+ accounts (NIST AC-2, SOC 2 CC6.1)
-- ServiceNow change records and audit evidence documentation
-- Splunk SIEM monitoring across 20+ endpoints
-- Tenable/Nessus vulnerability management
-- PowerShell/Python automation reducing audit prep time ~35%
-
-CERTIFICATIONS
-ISC2: SSCP, CCSP
-CompTIA: Security+, CySA+, PenTest+, Network+, A+, Project+,
-         Secure Infrastructure Specialist, IT Operations Specialist
-AXELOS: ITIL Foundation v4
-
-EDUCATION
-B.S. Cybersecurity & Information Assurance | WGU | Expected 2026
-
-FRAMEWORKS
-NIST SP 800-53 | ISO/IEC 27001 | SSAE 18 | SOC 1 | SOC 2 TSC | ITIL v4 | CIS Controls
-
-TOOLS
-Splunk | ServiceNow | Tenable/Nessus | Active Directory | PowerShell | Python | Wireshark
-
-LANGUAGES
-English C2 | Spanish C2
-
-PORTFOLIO
-AuditMap:        davidramirez-sec.github.io/auditmap
-ITGC Scorecard:  SOC1 Scope Tool: davidramirez-sec.github.io/soc1-scope
-Breach Patterns: davidramirez-sec.github.io/breach-patterns`;
-
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'David_Ramirez_CV.txt';
+  a.href = 'https://davidramirez-sec.github.io/portfolio/david-ramirez-cv.pdf';
+  a.download = 'David_Ramirez_CV.pdf';
+  a.target = '_blank';
   a.click();
-  URL.revokeObjectURL(url);
 }
 
 // CVE FEED - pulls from NIST NVD public API
