@@ -737,6 +737,94 @@ footer a:hover { color: var(--green); }
 .cve-footer a { color: var(--muted2); text-decoration: none; }
 .cve-footer a:hover { color: var(--teal); }
 
+
+/* LANGUAGE SWITCHER */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-left: 8px;
+}
+.lang-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted2);
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.lang-btn:hover { color: var(--white); background: var(--panel); }
+.lang-btn.active { color: var(--white); background: var(--border2); }
+.lang-flag { font-size: 11px; }
+
+/* Poland patriot flash overlay */
+.pl-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  pointer-events: none;
+  opacity: 0;
+}
+.pl-flash.top-half {
+  bottom: 50%;
+  background: #FFFFFF;
+}
+.pl-flash.bottom-half {
+  top: 50%;
+  background: #DC143C;
+}
+@keyframes plFlash {
+  0%   { opacity: 0; }
+  20%  { opacity: .18; }
+  80%  { opacity: .18; }
+  100% { opacity: 0; }
+}
+
+
+
+/* POLISH EAGLE + GREETING OVERLAY */
+.pl-eagle-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+}
+@keyframes eagleFade {
+  0%   { opacity: 0;    transform: scale(.85); }
+  25%  { opacity: .9;   transform: scale(1); }
+  75%  { opacity: .9;   transform: scale(1); }
+  100% { opacity: 0;    transform: scale(1.05); }
+}
+.pl-eagle-svg {
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 0 18px rgba(255,255,255,.5));
+}
+.pl-greeting {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 6px;
+  margin-top: 16px;
+  text-shadow: 0 0 20px rgba(255,255,255,.6);
+}
+
 @media (max-width: 768px) {
   .hero { grid-template-columns: 1fr; }
   .threat-widget { display: none; }
@@ -747,6 +835,49 @@ footer a:hover { color: var(--green); }
 </style>
 </head>
 <body>
+
+<div class="pl-flash top-half" id="plFlashTop"></div>
+<div class="pl-flash bottom-half" id="plFlashBottom"></div>
+<div class="pl-eagle-wrap" id="plEagleWrap">
+  <svg class="pl-eagle-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Simplified Polish eagle silhouette -->
+    <g fill="#FFFFFF">
+      <!-- Body -->
+      <ellipse cx="50" cy="55" rx="14" ry="18"/>
+      <!-- Head -->
+      <circle cx="50" cy="30" r="9"/>
+      <!-- Crown -->
+      <rect x="44" y="20" width="12" height="4" rx="1"/>
+      <rect x="44" y="16" width="3" height="5" rx="1"/>
+      <rect x="48.5" y="15" width="3" height="6" rx="1"/>
+      <rect x="53" y="16" width="3" height="5" rx="1"/>
+      <!-- Beak -->
+      <polygon points="50,34 55,37 50,40"/>
+      <!-- Left wing -->
+      <path d="M36,45 Q18,30 14,50 Q22,55 36,58 Z"/>
+      <path d="M36,50 Q20,38 16,55 Q24,60 36,62 Z"/>
+      <path d="M36,55 Q22,47 18,60 Q26,64 37,65 Z"/>
+      <!-- Right wing -->
+      <path d="M64,45 Q82,30 86,50 Q78,55 64,58 Z"/>
+      <path d="M64,50 Q80,38 84,55 Q76,60 64,62 Z"/>
+      <path d="M64,55 Q78,47 82,60 Q74,64 63,65 Z"/>
+      <!-- Tail -->
+      <path d="M44,72 Q40,82 38,90 Q45,86 50,80 Q55,86 62,90 Q60,82 56,72 Z"/>
+      <!-- Talons left -->
+      <path d="M40,73 Q34,76 32,80 Q36,78 40,76"/>
+      <path d="M40,74 Q33,79 32,84 Q37,81 41,78"/>
+      <path d="M41,75 Q35,82 35,87 Q39,83 42,79"/>
+      <!-- Talons right -->
+      <path d="M60,73 Q66,76 68,80 Q64,78 60,76"/>
+      <path d="M60,74 Q67,79 68,84 Q63,81 59,78"/>
+      <path d="M59,75 Q65,82 65,87 Q61,83 58,79"/>
+      <!-- Eye -->
+      <circle cx="53" cy="28" r="2" fill="#DC143C"/>
+    </g>
+  </svg>
+  <div class="pl-greeting">CZEŚĆ, POLSKO</div>
+</div>
+
 
 <canvas id="particleCanvas"></canvas>
 <div class="grid-bg"></div>
@@ -761,9 +892,13 @@ footer a:hover { color: var(--green); }
     </div>
   </div>
   <div class="topbar-right">
-    <div class="topbar-item">LOC: <span>HUNTSVILLE, AL → WARSAW, PL</span></div>
+    <div class="topbar-item">LOC: <span>HUNTSVILLE, AL → POLAND</span></div>
     <div class="topbar-item">CLEARANCE: <span>ANALYST</span></div>
     <div id="liveClock"></div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" id="btnEN" onclick="switchLang('en')"><span class="lang-flag">🇺🇸</span> EN</button>
+    <button class="lang-btn" id="btnPL" onclick="switchLang('pl')"><span class="lang-flag">🇵🇱</span> PL</button>
+  </div>
   </div>
 </div>
 
@@ -778,7 +913,7 @@ footer a:hover { color: var(--green); }
       <div class="hero-terminal"><span id="terminalText"></span><span class="cursor"></span></div>
       <div class="hero-links">
         <a class="hero-link primary" href="#" id="heroEmail">CONTACT</a>
-        <a class="hero-link" href="https://linkedin.com/in/davidramirez-sec" target="_blank">LINKEDIN</a>
+        <a class="hero-link" href="https://linkedin.com/in/david-ramirez-sec" target="_blank">LINKEDIN</a>
         <a class="hero-link" href="https://github.com/davidramirez-sec" target="_blank">GITHUB</a>
         <button class="hero-link" onclick="downloadCV()">DOWNLOAD CV</button>
       </div>
@@ -790,7 +925,7 @@ footer a:hover { color: var(--green); }
       <div class="threat-row"><span class="threat-key">EXPERIENCE</span><span class="threat-val">4+ YEARS</span></div>
       <div class="threat-row"><span class="threat-key">CERTS</span><span class="threat-val">12 ACTIVE</span></div>
       <div class="threat-row"><span class="threat-key">CLEARANCE</span><span class="threat-val">ANALYST LVL</span></div>
-      <div class="threat-row"><span class="threat-key">LANGUAGES</span><span class="threat-val">EN / ES C2</span></div>
+      <div class="threat-row"><span class="threat-key">LANGUAGES</span><span class="threat-val">ENGLISH / SPANISH C2</span></div>
     </div>
   </section>
 
@@ -1204,7 +1339,7 @@ footer a:hover { color: var(--green); }
           <div class="contact-val" id="contactEmailDisplay"></div>
         </div>
       </a>
-      <a class="contact-card" href="https://linkedin.com/in/davidramirez-sec" target="_blank">
+      <a class="contact-card" href="https://linkedin.com/in/david-ramirez-sec" target="_blank">
         <div class="contact-icon">🔗</div>
         <div class="contact-info">
           <div class="contact-label">LINKEDIN</div>
@@ -1239,11 +1374,20 @@ footer a:hover { color: var(--green); }
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// state
+let currentLang = 'en';
+
 // ── CLOCK ──────────────────────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
-  const utc = now.toUTCString().replace(' GMT','');
-  document.getElementById('liveClock').textContent = utc + ' UTC';
+  if (currentLang === 'pl') {
+    const date = now.toLocaleDateString('pl-PL', { timeZone: 'Europe/Warsaw', day:'2-digit', month:'2-digit', year:'numeric' });
+    const time = now.toLocaleTimeString('pl-PL', { timeZone: 'Europe/Warsaw', hour12: false });
+    document.getElementById('liveClock').textContent = date + '  ' + time + '  WARSZAWA';
+  } else {
+    const utc = now.toUTCString().replace(' GMT','');
+    document.getElementById('liveClock').textContent = utc + ' UTC';
+  }
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -1263,7 +1407,7 @@ const termEl = document.getElementById('terminalText');
 
 function typeWriter() {
   if (lineIdx >= lines.length) { lineIdx = 0; }
-  const current = lines[lineIdx];
+  const current = (window._termLines || lines)[lineIdx];
   if (!deleting) {
     termEl.textContent = current.substring(0, charIdx + 1);
     charIdx++;
@@ -1481,6 +1625,23 @@ function drawWorldMap() {
       tCtx.font = '9px Share Tech Mono';
       tCtx.fillStyle = col;
       tCtx.fillText(city.name.toUpperCase(), x + 8, y + 3);
+
+      // in PL mode show Warsaw coords and extra pulse
+      if (window._plMode && city.target) {
+        tCtx.font = '8px Share Tech Mono';
+        tCtx.fillStyle = 'rgba(0,255,136,.7)';
+        tCtx.fillText('52.2297°N  21.0122°E', x + 8, y + 14);
+        tCtx.fillText('CEL // TARGET', x + 8, y + 24);
+        // extra outer pulse ring
+        const pulse2 = (Date.now() % 1500) / 1500;
+        tCtx.beginPath();
+        tCtx.arc(x, y, size + pulse2 * 22, 0, Math.PI * 2);
+        tCtx.strokeStyle = '#00FF88';
+        tCtx.globalAlpha = (1 - pulse2) * 0.5;
+        tCtx.lineWidth = 1.5;
+        tCtx.stroke();
+        tCtx.globalAlpha = 1;
+      }
     }
   });
 }
@@ -1515,9 +1676,10 @@ addFeedItem(); addFeedItem(); addFeedItem();
 
 // ── CV DOWNLOAD ────────────────────────────────────────────────────────────
 function downloadCV() {
+  const t = TRANSLATIONS[currentLang];
   const a = document.createElement('a');
-  a.href = 'https://davidramirez-sec.github.io/portfolio/david-ramirez-cv.pdf';
-  a.download = 'David_Ramirez_CV.pdf';
+  a.href = t.cv_url;
+  a.download = t.cv_filename;
   a.target = '_blank';
   a.click();
 }
@@ -1596,6 +1758,337 @@ function renderFallbackCVEs() {
 
 loadCVEs();
 setInterval(loadCVEs, 15 * 60 * 1000);
+
+// ── LANGUAGE SWITCHER ─────────────────────────────────────────────────────
+// Polish translation — technical terms (SOC 1, SSAE 18, ITGC, NIST etc) kept
+// in English as Polish IT/audit professionals use them in English daily.
+const TRANSLATIONS = {
+  en: {
+    topbar_loc:        'HUNTSVILLE, AL → POLAND',
+    topbar_clearance:  'CLEARANCE:',
+    topbar_clearance_val: 'ANALYST',
+    eyebrow:           'ANALYST PROFILE // ACTIVE',
+    hero_title:        'IT AUDIT &nbsp;|&nbsp; SOC 1 &nbsp;|&nbsp; GRC &nbsp;|&nbsp; CYBERSECURITY',
+    btn_contact:       'CONTACT',
+    btn_linkedin:      'LINKEDIN',
+    btn_github:        'GITHUB',
+    btn_cv:            'DOWNLOAD CV',
+    status_label:      'STATUS',    status_val:      'OPEN TO WORK',
+    target_label:      'TARGET',    target_val:      'POLAND / EU',
+    visa_label:        'VISA',      visa_val:        'BLUE CARD REQ.',
+    exp_label:         'EXPERIENCE',exp_val:         '4+ YEARS',
+    certs_label:       'CERTS',     certs_val:       '12 ACTIVE',
+    clearance_label:   'CLEARANCE', clearance_val:   'ANALYST LVL',
+    lang_label:        'LANGUAGES', lang_val:        'ENGLISH / SPANISH C2',
+    s00_title:         'LIVE THREAT INTELLIGENCE FEED',
+    map_title:         'GLOBAL ATTACK SURFACE MONITOR // SIMULATED REAL-TIME DATA',
+    legend_critical:   'CRITICAL THREAT',
+    legend_high:       'HIGH SEVERITY',
+    legend_medium:     'MEDIUM',
+    legend_monitored:  'MONITORED',
+    s01_title:         'VERIFIED CREDENTIALS',
+    cert_verified:     'VERIFIED',
+    cert_pending:      'PENDING',
+    s02_title:         'CLASSIFIED PROJECT FILES',
+    pc_case_prefix:    'CASE FILE //',
+    pc_access:         'ACCESS FILE →',
+    pc_coming:         'COMING SOON',
+    pc_in_dev:         'IN DEV',
+    pc_live:           'LIVE',
+    pc01_desc: 'Multi-framework IT control mapping tool. Cross-references NIST SP 800-53, ISO/IEC 27001, and SOC 2 TSC across 50 controls with gap scoring and evidence checklist export.',
+    pc02_desc: '15-question SOC 1 ITGC health assessment across Logical Access, Change Management, and Computer Operations. Scored report card with remediation priorities.',
+    pc03_desc: 'Audit walkthrough simulator with 6 real-world scenarios. Read client evidence, identify exceptions, and get detailed feedback on your audit judgment.',
+    pc04_desc: '8-question decision tool determining SOC 1 applicability, report type, and in-scope domains based on SSAE 18 criteria. For companies navigating their first engagement.',
+    pc05_desc: 'Visual dashboard of 30 documented data breaches 2013–2024. Filterable by attack vector and sector. Every breach includes what failed, detection time, cost, and cited source.',
+    pc06_desc: 'NIS2 Directive compliance gap assessment tool for EU companies. Maps security posture against Article requirements with remediation roadmap.',
+    s03_title:         'CAPABILITY ASSESSMENT',
+    sg_audit:          'AUDIT & COMPLIANCE',
+    sg_secops:         'SECURITY OPERATIONS',
+    sg_tech:           'TECHNICAL',
+    act_title:         'RECENT ACTIVITY LOG',
+    act1: 'Launched <strong>Breach Patterns</strong> — 30 breach dashboard',
+    act2: 'Built <strong>SOC1 Scope Tool</strong> — SSAE 18 decision engine',
+    act3: 'Deployed <strong>SOC1 Simulator</strong> — audit walkthrough training',
+    act4: 'Launched <strong>AuditMap</strong> — multi-framework control mapper',
+    act5: 'Achieved <strong>CCSP</strong> certification — ISC2',
+    s04_title:         'LIVE CVE INTELLIGENCE',
+    cve_header:        'NIST NVD // CRITICAL & HIGH SEVERITY // REAL-TIME',
+    cve_live:          'LIVE FEED',
+    cve_source:        'SOURCE:',
+    cve_source_suffix: '// NIST NATIONAL VULNERABILITY DATABASE',
+    s05_title:         'ESTABLISH CONTACT',
+    contact_email_label:    'PRIMARY CHANNEL',
+    contact_linkedin_label: 'LINKEDIN',
+    contact_github_label:   'GITHUB',
+    contact_location_label: 'RELOCATION TARGET',
+    contact_location_val:   'Poland — EU Blue Card',
+    footer_tagline:    'DAVID RAMIREZ // ANALYST PROFILE // v2.0',
+    footer_certs:      'SSCP · CCSP · CySA+ · Security+ · ITIL v4',
+    terminal_lines: [
+      'Initializing analyst profile...',
+      'Loading credentials... [12 VERIFIED]',
+      'Scanning frameworks: NIST | ISO 27001 | SOC 1 | SSAE 18',
+      'Status: OPEN TO RELOCATION → POLAND',
+      'Target: SOC 1 Audit | GRC | IT Compliance',
+      'Blue Card sponsorship required.',
+      'Ready. Awaiting contact.'
+    ],
+    cv_url: 'https://davidramirez-sec.github.io/portfolio/david-ramirez-cv.pdf',
+    cv_filename: 'David_Ramirez_CV.pdf',
+  },
+  pl: {
+    topbar_loc:        'HUNTSVILLE, AL → POLSKA',
+    topbar_clearance:  'POZIOM:',
+    topbar_clearance_val: 'ANALITYK',
+    eyebrow:           'PROFIL ANALITYKA // AKTYWNY',
+    hero_title:        'AUDYT IT &nbsp;|&nbsp; SOC 1 &nbsp;|&nbsp; GRC &nbsp;|&nbsp; CYBERBEZPIECZEŃSTWO',
+    btn_contact:       'KONTAKT',
+    btn_linkedin:      'LINKEDIN',
+    btn_github:        'GITHUB',
+    btn_cv:            'POBIERZ CV',
+    status_label:      'STATUS',    status_val:      'OTWARTY NA OFERTY',
+    target_label:      'CEL',       target_val:      'POLSKA / UE',
+    visa_label:        'WIZA',      visa_val:        'BLUE CARD WYMAGANA',
+    exp_label:         'DOŚWIADCZ.',exp_val:         '4+ LATA',
+    certs_label:       'CERTYFIK.',  certs_val:       '12 AKTYWNYCH',
+    clearance_label:   'POZIOM',    clearance_val:   'ANALITYK',
+    lang_label:        'JĘZYKI',    lang_val:        'ANGIELSKI C2 / HISZPAŃSKI C2',
+    s00_title:         'AKTUALNY FEED WYWIADU O ZAGROŻENIACH',
+    map_title:         'MONITOR GLOBALNEJ POWIERZCHNI ATAKU // DANE SYMULOWANE W CZASIE RZECZYWISTYM',
+    legend_critical:   'ZAGROŻENIE KRYTYCZNE',
+    legend_high:       'WYSOKA DOTKLIWOŚĆ',
+    legend_medium:     'ŚREDNIA',
+    legend_monitored:  'MONITOROWANE',
+    s01_title:         'POTWIERDZONE CERTYFIKATY',
+    cert_verified:     'ZWERYFIKOWANY',
+    cert_pending:      'W TOKU',
+    s02_title:         'PLIKI PROJEKTÓW',
+    pc_case_prefix:    'PLIK //',
+    pc_access:         'OTWÓRZ PLIK →',
+    pc_coming:         'WKRÓTCE',
+    pc_in_dev:         'W BUDOWIE',
+    pc_live:           'AKTYWNY',
+    pc01_desc: 'Narzędzie do mapowania kontrolek IT w wielu frameworkach. Porównuje NIST SP 800-53, ISO/IEC 27001 i SOC 2 TSC dla 50 kontrolek z oceną luk i eksportem listy dowodów.',
+    pc02_desc: 'Ocena gotowości SOC 1 — 15 pytań obejmujących dostęp logiczny, zarządzanie zmianami i operacje systemowe. Raport wynikowy z priorytetami naprawczymi.',
+    pc03_desc: 'Symulator przeglądu audytowego z 6 scenariuszami z realnych zaangażowań. Analizuj dowody, identyfikuj wyjątki i otrzymaj szczegółową informację zwrotną.',
+    pc04_desc: 'Narzędzie decyzyjne z 8 pytaniami — określa zasadność SOC 1, typ raportu i domeny w zakresie na podstawie kryteriów SSAE 18.',
+    pc05_desc: 'Wizualny dashboard 30 udokumentowanych naruszeń danych z lat 2013–2024. Filtrowalny według wektora ataku i sektora. Każde naruszenie zawiera źródło, czas wykrycia i koszt.',
+    pc06_desc: 'Narzędzie do oceny luk w zgodności z dyrektywą NIS2 dla firm z UE. Mapuje stan bezpieczeństwa względem wymagań artykułów z planem działań naprawczych.',
+    s03_title:         'OCENA KOMPETENCJI',
+    sg_audit:          'AUDYT I ZGODNOŚĆ',
+    sg_secops:         'OPERACJE BEZPIECZEŃSTWA',
+    sg_tech:           'TECHNICZNE',
+    act_title:         'DZIENNIK AKTYWNOŚCI',
+    act1: 'Uruchomiono <strong>Breach Patterns</strong> — dashboard 30 naruszeń',
+    act2: 'Zbudowano <strong>SOC1 Scope Tool</strong> — silnik decyzyjny SSAE 18',
+    act3: 'Wdrożono <strong>SOC1 Simulator</strong> — szkolenie z przeglądu audytowego',
+    act4: 'Uruchomiono <strong>AuditMap</strong> — mapper kontrolek wielu frameworków',
+    act5: 'Uzyskano certyfikat <strong>CCSP</strong> — ISC2',
+    s04_title:         'AKTUALNY FEED CVE',
+    cve_header:        'NIST NVD // KRYTYCZNE I WYSOKIE ZAGROŻENIA // W CZASIE RZECZYWISTYM',
+    cve_live:          'AKTYWNY FEED',
+    cve_source:        'ŹRÓDŁO:',
+    cve_source_suffix: '// NIST NATIONAL VULNERABILITY DATABASE',
+    s05_title:         'NAWIĄŻ KONTAKT',
+    contact_email_label:    'GŁÓWNY KANAŁ',
+    contact_linkedin_label: 'LINKEDIN',
+    contact_github_label:   'GITHUB',
+    contact_location_label: 'CEL RELOKACJI',
+    contact_location_val:   'Polska — EU Blue Card',
+    footer_tagline:    'DAVID RAMIREZ // PROFIL ANALITYKA // v2.0',
+    footer_certs:      'SSCP · CCSP · CySA+ · Security+ · ITIL v4',
+    terminal_lines: [
+      'Szukam swojego miejsca w Polsce...',
+      'Inicjowanie profilu analityka...',
+      'Ładowanie certyfikatów... [12 ZWERYFIKOWANYCH]',
+      'Skanowanie frameworków: NIST | ISO 27001 | SOC 1 | SSAE 18',
+      'Status: OTWARTY NA RELOKACJĘ → POLSKA',
+      'Cel: Audyt SOC 1 | GRC | Zgodność IT',
+      'Wymagane sponsorowanie Blue Card.',
+      'Gotowy. Oczekuję na kontakt.'
+    ],
+    cv_url: 'https://davidramirez-sec.github.io/portfolio/david-ramirez-cv-pl.pdf',
+    cv_filename: 'David_Ramirez_CV_PL.pdf',
+  }
+};
+
+
+function switchLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+
+  if (lang === 'pl') {
+    // flash the flag colors
+    const top = document.getElementById('plFlashTop');
+    const bot = document.getElementById('plFlashBottom');
+    top.style.animation = 'none';
+    bot.style.animation = 'none';
+
+    // eagle + greeting
+    const eagle = document.getElementById('plEagleWrap');
+    eagle.style.animation = 'none';
+
+    requestAnimationFrame(() => {
+      top.style.animation = 'plFlash 1s ease forwards';
+      bot.style.animation = 'plFlash 1s ease forwards';
+      eagle.style.animation = 'eagleFade 1s ease forwards';
+    });
+
+    // pulse Warsaw on threat map
+    window._plMode = true;
+  } else {
+    window._plMode = false;
+  }
+
+  // toggle active state on buttons
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+  document.getElementById('btnPL').classList.toggle('active', lang === 'pl');
+
+  applyTranslations(lang);
+}
+
+function applyTranslations(lang) {
+  const t = TRANSLATIONS[lang];
+
+  // topbar
+  const locSpan = document.querySelector('.topbar-item span');
+  if (locSpan) locSpan.textContent = t.topbar_loc;
+  const items = document.querySelectorAll('.topbar-item');
+  if (items[1]) {
+    items[1].innerHTML = t.topbar_clearance + ' <span>' + t.topbar_clearance_val + '</span>';
+  }
+
+  // hero
+  const eyebrow = document.querySelector('.hero-eyebrow');
+  if (eyebrow) eyebrow.textContent = t.eyebrow;
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) heroTitle.innerHTML = t.hero_title;
+
+  // hero buttons
+  const heroEmail = document.getElementById('heroEmail');
+  if (heroEmail) heroEmail.textContent = t.btn_contact;
+  const heroLinks = document.querySelectorAll('.hero-links .hero-link');
+  if (heroLinks[1]) heroLinks[1].textContent = t.btn_linkedin;
+  if (heroLinks[2]) heroLinks[2].textContent = t.btn_github;
+  if (heroLinks[3]) heroLinks[3].textContent = t.btn_cv;
+
+  // threat widget rows
+  const rows = document.querySelectorAll('.threat-row');
+  const rowData = [
+    [t.status_label, t.status_val, ''],
+    [t.target_label, t.target_val, 'teal'],
+    [t.visa_label, t.visa_val, 'orange'],
+    [t.exp_label, t.exp_val, ''],
+    [t.certs_label, t.certs_val, ''],
+    [t.clearance_label, t.clearance_val, ''],
+    [t.lang_label, t.lang_val, ''],
+  ];
+  rows.forEach((row, i) => {
+    if (rowData[i]) {
+      const key = row.querySelector('.threat-key');
+      const val = row.querySelector('.threat-val');
+      if (key) key.textContent = rowData[i][0];
+      if (val) {
+        val.textContent = rowData[i][1];
+        val.className = 'threat-val' + (rowData[i][2] ? ' ' + rowData[i][2] : '');
+      }
+    }
+  });
+
+  // section titles
+  const sectionTitles = document.querySelectorAll('.section-title');
+  const titles = [t.s00_title, t.s01_title, t.s02_title, t.s03_title, t.s04_title, t.s05_title];
+  sectionTitles.forEach((el, i) => { if (titles[i]) el.textContent = titles[i]; });
+
+  // threat map
+  const mapTitle = document.querySelector('.threat-map-title');
+  if (mapTitle) mapTitle.textContent = t.map_title;
+  const legendItems = document.querySelectorAll('.tl-item');
+  const legends = [t.legend_critical, t.legend_high, t.legend_medium, t.legend_monitored];
+  legendItems.forEach((el, i) => {
+    if (legends[i]) {
+      const dot = el.querySelector('.tl-dot');
+      el.textContent = legends[i];
+      if (dot) el.insertBefore(dot, el.firstChild);
+    }
+  });
+
+  // project cards
+  const descs = document.querySelectorAll('.pc-desc');
+  const descKeys = ['pc01_desc','pc02_desc','pc03_desc','pc04_desc','pc05_desc','pc06_desc'];
+  descs.forEach((el, i) => { if (t[descKeys[i]]) el.innerHTML = t[descKeys[i]]; });
+
+  const caseNums = document.querySelectorAll('.pc-case-num');
+  caseNums.forEach((el, i) => {
+    el.textContent = t.pc_case_prefix + ' DR-00' + (i + 1);
+  });
+
+  const accessLinks = document.querySelectorAll('.pc-link');
+  accessLinks.forEach(el => {
+    if (el.textContent.includes('ACCESS') || el.textContent.includes('OTWÓRZ')) {
+      el.textContent = t.pc_access;
+    } else if (el.textContent.includes('SOON') || el.textContent.includes('WKRÓTCE')) {
+      el.textContent = t.pc_coming;
+    }
+  });
+
+  const statusBadges = document.querySelectorAll('.pc-status');
+  statusBadges.forEach(el => {
+    if (el.classList.contains('live')) el.textContent = t.pc_live;
+    else if (el.textContent.includes('DEV') || el.textContent.includes('BUDOWIE')) el.textContent = t.pc_in_dev;
+  });
+
+  // skill group titles
+  const sgTitles = document.querySelectorAll('.skill-group-title');
+  if (sgTitles[0]) sgTitles[0].textContent = t.sg_audit;
+  if (sgTitles[1]) sgTitles[1].textContent = t.sg_secops;
+  if (sgTitles[2]) sgTitles[2].textContent = t.sg_tech;
+
+  // activity feed
+  const actTitle = document.querySelector('.activity-title');
+  if (actTitle) actTitle.textContent = t.act_title;
+  const actItems = document.querySelectorAll('.activity-text');
+  const actKeys = ['act1','act2','act3','act4','act5'];
+  actItems.forEach((el, i) => { if (t[actKeys[i]]) el.innerHTML = t[actKeys[i]]; });
+
+  // CVE section
+  const cveTitle = document.querySelector('.cve-title');
+  if (cveTitle) cveTitle.textContent = t.cve_header;
+  const cveLive = document.querySelector('.cve-live-badge');
+  if (cveLive) {
+    const dot = cveLive.querySelector('.status-dot');
+    cveLive.textContent = ' ' + t.cve_live;
+    if (dot) cveLive.insertBefore(dot, cveLive.firstChild);
+  }
+
+  // contact labels
+  const contactLabels = document.querySelectorAll('.contact-label');
+  const contactKeys = [t.contact_email_label, t.contact_linkedin_label, t.contact_github_label, t.contact_location_label];
+  contactLabels.forEach((el, i) => { if (contactKeys[i]) el.textContent = contactKeys[i]; });
+  const locVal = document.querySelector('.contact-card:last-child .contact-val');
+  if (locVal) locVal.textContent = t.contact_location_val;
+
+  // cert verified/pending labels
+  const certVerified = document.querySelectorAll('.cert-verified');
+  certVerified.forEach(el => {
+    if (el.style.color && el.style.color !== '') {
+      el.textContent = t.cert_pending;
+    } else {
+      el.textContent = t.cert_verified;
+    }
+  });
+
+  // footer
+  const footerSpans = document.querySelectorAll('footer span');
+  if (footerSpans[0]) footerSpans[0].textContent = t.footer_tagline;
+  if (footerSpans[1]) footerSpans[1].textContent = t.footer_certs;
+
+  // update terminal lines
+  window._termLines = t.terminal_lines;
+  lineIdx = 0; charIdx = 0; deleting = false;
+}
+
+
 
 // build email links in JS so Cloudflare can't obfuscate them
 (function() {
